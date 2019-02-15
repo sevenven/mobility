@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title>竖向滑屏</title>
+		<link rel="stylesheet" type="text/css" href="../css/cluster.css" />
+		<style type="text/css">
+			.wrap{
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div id="wrap1" class="wrap">
+				<div class="content-block">
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var $wrapContent = document.querySelector("#wrap1 .content-block");
+				var str = ""
+				for(var i = 0; i < 50; i++){
+					str += '<div style="text-align: center; margin-top: 1rem; font-size:0.32rem">' + i + ' 竖向滑屏</div>'
+				}
+				$wrapContent.innerHTML = str;
+				var verticalMove = new VerticalMove("#wrap1");
+			}
+		</script>
+	</body>
+</html>

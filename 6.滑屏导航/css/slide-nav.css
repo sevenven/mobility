@@ -1,0 +1,25 @@
+.nav-list {
+	float: left;
+	list-style: none;
+	font-size: 0;
+	white-space: nowrap;
+}
+.nav-list li {
+	display: inline-block;
+	width: 1.1rem;
+	height: 0.8rem;
+	line-height: 0.8rem;
+	font-size: 0.32rem;
+	text-align: center;
+}
+.tap-wrap{
+	width: 300%;
+	overflow: hidden;
+}
+.tap-loading, .tap-content{
+	width: 7.5rem;
+	float: left;
+}
+.tap-loading{
+	opacity: 0;
+}

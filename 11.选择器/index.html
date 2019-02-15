@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="Height=device-Height,initial-scale=1.0,minimum-scale=1.0,maYimum-scale=1.0,user-scalable=no" />
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>选择器</title>
+		<link rel="stylesheet" type="text/css" href="css/picker.css" />
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html, body{
+				height: 100%;
+				overflow: hidden;
+			}
+			.page{
+				position: relative;
+				height: 100%;
+				overflow: hidden;
+			}
+			.page-container{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+			}
+			.content-block{
+				overflow: auto;
+			}
+			.page-container{
+				top: 1rem;
+			}
+			.mask{
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background: rgba(0,0,0,0.5);
+				z-index: 10;
+			}
+			.tip{
+				font-size: 0.32rem;
+				margin-left: 0.8rem;
+				margin-bottom: 0.1rem;
+			}
+			.testBox{
+				width: 80%;
+				height: 0.8rem;
+				line-height: 0.8rem;
+				text-align: center;
+				font-size: 0.32rem;
+				margin: 0 auto;
+				border: 1px solid #E5E5E5;
+				margin-bottom: 0.2rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="page-container">
+				<div class="content-block">
+					<div class="tip">无默认值</div>
+					<div id="picker1" class="testBox"></div>
+					<div class="tip">有默认值</div>
+					<div id="picker2" class="testBox" data-key="5">今天星期五</div>
+					<div class="tip">数据格式2</div>
+					<div id="picker3" class="testBox" data-key="今天星期二">今天星期二</div>
+					<div class="tip">日期选择器</div>
+					<div id="datePicker" class="testBox"></div>
+					<div class="tip">地区选择器</div>
+					<div id="cityPicker" class="testBox"></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/picker.js"></script>
+		<script type="text/javascript">
+			/*
+			原理：改变了一个元素在不同设备上占据的css像素的个数
+			rem适配的优缺点
+				优点:没有破坏完美视口
+				缺点:px值到rem的转换太复杂
+			*/
+			!(function(){
+				var styleNode = document.createElement("style");
+				var w = document.documentElement.clientWidth/7.5; // 100*(document.documentElement.clientWidth/750) ??
+				styleNode.innerHTML = "html{font-size:"+w+"px!important}";
+				document.head.appendChild(styleNode);
+			})();
+			
+			var page = document.querySelector(".page");
+			page.addEventListener("touchstart",function(ev){
+				ev=ev||event;
+				// 禁掉文字选中的默认行为 以及下拉的系统橡皮筋效果
+				ev.preventDefault();
+			})
+			
+			//移动端a标签的跳转方案  解决误触
+			var aNodes = document.querySelectorAll("a");
+			for(var i=0;i<aNodes.length;i++){
+				aNodes[i].addEventListener("touchstart",function(){
+					this.isMoved=false;
+				});
+				aNodes[i].addEventListener("touchmove",function(){
+					this.isMoved=true;
+				});
+				aNodes[i].addEventListener("touchend",function(){
+					if(!this.isMoved){
+						location.href=this.href;
+					}
+				});
+			}
+			/*
+			支持2种格式的数据：
+			[
+				[{key: value, key: value}]
+			]
+			[
+				[item, item, item]
+			]
+			*/
+			/* 
+			扩展
+			[
+				[],
+				[01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12],
+				[]
+			]
+			{
+				"140000": {
+					"name": "山西省",
+					"child": {
+						"140100": {
+							"name": "太原市",
+							"child": {
+								"140101": "市辖区",
+							}
+						},
+						"140200": {
+							"name": "大同市",
+							"child": {
+								"140201": "市辖区",
+							}
+						},
+					}
+				}
+			} 
+			*/
+			var data1 = [];
+			data1[0] = {
+				1: "今天星期一",
+				2: "今天星期二",
+				3: "今天星期三",
+				4: "今天星期四",
+				5: "今天星期五",
+				6: "今天星期六",
+				7: "今天星期天",
+				8: "今天星期8",
+				9: "今天星期9",
+				10: "今天星期10",
+				11: "今天星期11",
+			}
+			var picker1 = new Picker("#picker1", data1);
+			var picker2 = new Picker("#picker2", data1);
+			var data2 = [];
+			data2[0] = ["今天星期一", "今天星期二", "今天星期三", "今天星期四", "今天星期五", "今天星期六", "今天星期天"];
+			var picker3 = new Picker("#picker3", data2);
+			// 时间选择器
+			var datePicker = new DatePicker("#datePicker");
+			// 地区选择器
+			var cityPicker = new CityPicker("#cityPicker", {level: 2});
+		</script>
+	</body>
+</html>
+

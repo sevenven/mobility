@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<meta name="format-detection" content="telephone=no,email=no"/>
+		<title>移动端轮播-position版</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html, body{
+				height: 100%;
+				overflow: hidden;
+			}
+			.page{
+				height: 100%;
+			}
+			.carousel-wrap{
+				position: relative;
+				width: 100%;
+				overflow: hidden;
+			}
+			.carousel-list{
+				position: absolute;
+			} 
+			.carousel-list > li{
+				float: left;
+			}
+			.carousel-list > li > a,.carousel-list > li > a > img{
+				display: block;
+			}
+			.carousel-list > li > a > img{
+				width: 100%;
+			}
+			.carousel-points{
+				position: absolute;
+				width: 100%;
+				text-align: center;
+				bottom: 0.25rem;
+				font-size: 0;
+				z-index: 1;
+			}
+			.carousel-points span{
+				display: inline-block;
+				width: 0.25rem;
+				height: 0.25rem;
+				border-radius: 50%;
+				background-color: rgba(255, 255, 255, 1);
+				margin-left: 0.12rem;
+			}
+			.carousel-points span.active{
+				background: grey;
+			}
+			.carousel-points span:nth-child(1){
+				margin-left: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="carousel-wrap">
+				<div class="carousel-points"></div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			window.onload=function(){
+				
+				var page = document.querySelector(".page");
+				page.addEventListener("touchstart",function(ev){
+					ev=ev||event;
+					ev.preventDefault();
+				})
+				
+				!(function(){
+					var styleNode = document.createElement("style");
+					var w = document.documentElement.clientWidth/7.5; // 100*(document.documentElement.clientWidth/750) ??
+					styleNode.innerHTML = "html{font-size:"+w+"px!important}";
+					document.head.appendChild(styleNode);
+				})();
+				
+				var imgArr = ["image/1.jpg", "image/2.jpg", "image/3.jpg", "image/4.jpg", "image/5.jpg"];
+				carousel(imgArr);
+				function carousel(imgArr){
+					var carouselWrap = document.querySelector(".carousel-wrap");
+					if(carouselWrap){
+						var ulNode = document.createElement("ul");
+						var imgLength = imgArr.length;
+						ulNode.classList.add("carousel-list");
+						ulNode.style.width = imgLength + "00%";
+						for(var i = 0; i < imgLength; i++){
+							ulNode.innerHTML += '<li style="width: ' + (100/imgLength) + '%"><a href="javascript:;"><img src="' + imgArr[i] + '" /></a></li>';
+						}
+						carouselWrap.appendChild(ulNode);
+						setTimeout(function(){
+							var imgNode = document.querySelector(".carousel-list > li > a > img");
+							carouselWrap.style.height = imgNode.offsetHeight + "px";
+						}, 100);
+						var pointsWrap = document.querySelector(".carousel-points");
+						if(pointsWrap){
+							for(var i = 0; i < imgLength; i++){
+								if(i == 0){
+									pointsWrap.innerHTML += '<span class="active"></span>'
+								}else{
+									pointsWrap.innerHTML += '<span></span>'
+								}
+							}
+							var points = document.querySelectorAll(".carousel-points > span")
+						}
+						/* 
+							滑屏
+							1.拿到元素一开始的位置
+							2.拿到手指一开始点击的位置
+							3.拿到手指move的实时距离
+							4.将手指移动的距离加给元素
+						*/
+						// touchstart时元素的位置
+						var elementX = 0
+						// touchstart时手指的位置
+						var startX = 0;
+						carouselWrap.addEventListener("touchstart", function(ev){
+							ev= ev || event;
+							var touchC = ev.changedTouches[0];
+							ulNode.style.transition = "none"
+							startX = touchC.clientX;
+							elementX = ulNode.offsetLeft;
+						});
+						carouselWrap.addEventListener("touchmove", function(ev){
+							ev = ev || event;
+							var touchC = ev.changedTouches[0];
+							var nowX = touchC.clientX;
+							var disX = nowX - startX;
+							ulNode.style.left = elementX + disX + "px";
+						});
+						carouselWrap.addEventListener("touchend", function(ev){
+							ev = ev || event;
+							var index = Math.round(ulNode.offsetLeft / document.documentElement.clientWidth);
+							// 超出控制
+							if(index > 0){
+								index = 0;
+							}
+							if(index < 1-imgLength){
+								index = 1-imgLength;
+							}
+							for(var i = 0; i < points.length; i++){
+								points[i].classList.remove("active");
+							}
+							points[-index].classList.add("active");
+							ulNode.style.transition = "0.5s left"
+							ulNode.style.left = index * (document.documentElement.clientWidth) + "px";
+						});
+					}
+				}
+			}
+		</script>
+	</body>
+</html>

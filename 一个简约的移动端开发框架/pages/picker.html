@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title>选择器</title>
+		<link rel="stylesheet" type="text/css" href="../css/cluster.css" />
+		<style type="text/css">
+			.tip{
+				font-size: 0.32rem;
+				margin-left: 0.8rem;
+				margin-bottom: 0.1rem;
+			}
+			.testBox{
+				width: 80%;
+				height: 0.8rem;
+				line-height: 0.8rem;
+				text-align: center;
+				font-size: 0.32rem;
+				margin: 0 auto;
+				border: 1px solid #E5E5E5;
+				margin-bottom: 0.2rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="page-container">
+				<div class="content-block">
+					<div class="tip" style="margin-top: 0.5rem;">无默认值</div>
+					<div id="picker1" class="testBox"></div>
+					<div class="tip">有默认值</div>
+					<div id="picker2" class="testBox" data-key="5">今天星期五</div>
+					<div class="tip">数据格式2</div>
+					<div id="picker3" class="testBox" data-key="今天星期二">今天星期二</div>
+					<div class="tip">日期选择器</div>
+					<div id="datePicker" class="testBox"></div>
+					<div class="tip">地区选择器</div>
+					<div id="cityPicker" class="testBox"></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var data1 = [];
+				data1[0] = {
+					1: "今天星期一",
+				 	2: "今天星期二",
+				 	3: "今天星期三",
+				 	4: "今天星期四",
+				 	5: "今天星期五",
+				 	6: "今天星期六",
+				 	7: "今天星期天",
+				 	8: "今天星期8",
+				 	9: "今天星期9",
+				 	10: "今天星期10",
+				 	11: "今天星期11",
+				}
+				var picker1 = new Picker("#picker1", data1);
+				var picker2 = new Picker("#picker2", data1);
+				var data2 = [];
+				data2[0] = ["今天星期一", "今天星期二", "今天星期三", "今天星期四", "今天星期五", "今天星期六", "今天星期天"];
+				var picker3 = new Picker("#picker3", data2);
+				// 时间选择器
+				var datePicker = new DatePicker("#datePicker");
+				// 地区选择器
+				var cityPicker = new CityPicker("#cityPicker", {level: 2});
+			}
+		</script>
+	</body>
+</html>

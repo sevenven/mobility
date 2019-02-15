@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="Height=device-Height,initial-scale=1.0,minimum-scale=1.0,maYimum-scale=1.0,user-scalable=no" />
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>竖向滑屏</title>
+		<link rel="stylesheet" type="text/css" href="css/vertical-move.css" />
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html, body{
+				height: 100%;
+				overflow: hidden;
+			}
+			.page{
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div id="wrap1" class="wrap">
+				<div class="content">
+					<!-- <div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div>
+					<div style="text-align: center; margin-top: 5rem;">竖向滑屏</div> -->
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/vertical-move.js"></script>
+		<script type="text/javascript">
+			/*
+			原理：改变了一个元素在不同设备上占据的css像素的个数
+			rem适配的优缺点
+				优点:没有破坏完美视口
+				缺点:px值到rem的转换太复杂
+			*/
+			!(function(){
+				var styleNode = document.createElement("style");
+				var w = document.documentElement.clientWidth/7.5; // 100*(document.documentElement.clientWidth/750) ??
+				styleNode.innerHTML = "html{font-size:"+w+"px!important}";
+				document.head.appendChild(styleNode);
+			})();
+			
+			var page = document.querySelector(".page");
+			page.addEventListener("touchstart",function(ev){
+				ev=ev||event;
+				// 禁掉文字选中的默认行为 以及下拉的系统橡皮筋效果
+				ev.preventDefault();
+			})
+			
+			//移动端a标签的跳转方案  解决误触
+			var aNodes = document.querySelectorAll("a");
+			for(var i=0;i<aNodes.length;i++){
+				aNodes[i].addEventListener("touchstart",function(){
+					this.isMoved=false;
+				});
+				aNodes[i].addEventListener("touchmove",function(){
+					this.isMoved=true;
+				});
+				aNodes[i].addEventListener("touchend",function(){
+					if(!this.isMoved){
+						location.href=this.href;
+					}
+				});
+			}
+			
+			var $wrapContent = document.querySelector("#wrap1 .content");
+			var str = ""
+			for(var i = 0; i < 100; i++){
+				str += '<div style="text-align: center; margin-top: 1rem; font-size:0.32rem">' + i + ' 竖向滑屏</div>'
+			}
+			$wrapContent.innerHTML = str;
+			var verticalMove = new VerticalMove("#wrap1");
+		</script>
+	</body>
+</html>

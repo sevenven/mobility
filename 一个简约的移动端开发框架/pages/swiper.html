@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title>无缝滑屏</title>
+		<link rel="stylesheet" type="text/css" href="../css/cluster.css" />
+	</head>
+	<body>
+		<div class="page">
+			<div class="page-container">
+				<div class="content-block">
+					<div id="carousel1" class="carousel-wrap" needSeamless needAuto>
+						<div class="carousel-points"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var imgArr = ["../image/1.jpg", "../image/2.jpg", "../image/3.jpg", "../image/4.jpg", "../image/5.jpg"];
+				var swiper = new Swiper("#carousel1", imgArr);
+			}
+		</script>
+	</body>
+</html>

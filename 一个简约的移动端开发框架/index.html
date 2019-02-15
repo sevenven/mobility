@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<meta name="format-detection" content="telephone=no,email=no"/>
+		<title>一个简约的移动端开发框架</title>
+		<link rel="stylesheet" type="text/css" href="css/cluster.css" />
+		<style type="text/css">
+			.header{
+				height: 1.2rem;
+				line-height: 1.2rem;
+				text-align: center;
+				font-size: 0.4rem;
+				border-bottom: 1px solid #E5E5E5;
+			}
+			.page-container{
+				top: 1.2rem;
+			}
+			.content-item{
+				height: 1rem;
+				line-height: 1rem;
+				border-bottom: 1px solid #E5E5E5;
+				padding-left: 0.48rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="page">
+				<div class="header">Mobile plugin</div>
+				<div class="page-container">
+					<div class="content-block">
+						<div class="content-item" data-type="swiper">1.无缝滑屏</div>
+						<div class="content-item" data-type="dragNav">2.拖拽导航</div>
+						<div class="content-item" data-type="slideNav">3.滑屏导航</div>
+						<div class="content-item" data-type="verticalMove">4.竖向滑屏</div>
+						<div class="content-item" data-type="scrollbar">5.自定义滚动条</div>
+						<div class="content-item" data-type="pullRefresh">6.下拉刷新</div>
+						<div class="content-item" data-type="infinite">7.无限滚动</div>
+						<div class="content-item" data-type="picker">8.选择器</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var content = document.querySelector(".content-block");
+				var isMove = false;
+				content.addEventListener("touchstart", function(ev){
+					ev=ev||event;
+					isMove = false;
+				});
+				content.addEventListener("touchmove", function(ev){
+					ev=ev||event;
+					isMove = true;
+				});
+				content.addEventListener("touchend", function(ev){
+					if(isMove) return;
+					ev=ev||event;
+					var type = ev.target.getAttribute("data-type");
+					switch(type){
+						case "swiper": 
+							window.location.href = 'pages/swiper.html';
+							break;
+						case "dragNav": 
+							window.location.href = 'pages/drag-nav.html';
+							break;
+						case "slideNav": 
+							window.location.href = 'pages/slide-nav.html';
+							break;
+						case "verticalMove": 
+							window.location.href = 'pages/vertical-move.html';
+							break;
+						case "scrollbar": 
+							window.location.href = 'pages/scrollbar.html';
+							break;
+						case "pullRefresh": 
+							window.location.href = 'pages/pull-refresh.html';
+							break;
+						case "infinite": 
+							window.location.href = 'pages/infinite.html';
+							break;
+						case "picker": 
+							window.location.href = 'pages/picker.html';
+							break;
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title>无限滚动</title>
+		<link rel="stylesheet" type="text/css" href="../css/cluster.css" />
+		<style type="text/css">
+			.content-item{
+				height: 1rem;
+				line-height: 1rem;
+				font-size: 0.32rem;
+				text-align: center;
+				border-bottom: 1px solid #E5E5E5;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="page-container">
+				<div class="content-block">
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var content = document.querySelector(".page-container .content-block");
+				var str = ""
+				for(var i = 0; i < 14; i++){
+					str += '<div class="content-item">' + i + ' 无限滚动</div>'
+				}
+				content.innerHTML = str;
+				util.infinite(function(){
+					setTimeout(function(){
+						str = "";
+						var fragment = document.createDocumentFragment();
+						pullLayer = content.querySelector(".infinite-layer");
+						for(var j = 0; j < 14; j++){
+							fragment.appendChild(parseDom('<div class="content-item">' + (i++) + ' 无限滚动</div>'));
+						}
+						content.insertBefore(fragment, pullLayer);
+						//util.loadingEnd();
+					}, 800)
+				})
+				
+				function parseDom(str) {
+				　　 var objE = document.createElement("div");
+				　　 objE.innerHTML = str;
+				　　 return objE.childNodes[0];
+				}
+			}
+		</script>
+	</body>
+</html>

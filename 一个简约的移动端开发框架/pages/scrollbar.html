@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title>自定义滚动条</title>
+		<link rel="stylesheet" type="text/css" href="../css/cluster.css" />
+		<style type="text/css">
+			.wrap{
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="page-container">
+				<div class="content-block">
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var content = document.querySelector(".page-container .content-block");
+				var str = ""
+				for(var i = 0; i < 30; i++){
+					str += '<div style="text-align: center; margin-top: 1rem; font-size:0.32rem">' + i + ' 自定义滚动条</div>'
+				}
+				content.innerHTML = str;
+			}
+		</script>
+	</body>
+</html>

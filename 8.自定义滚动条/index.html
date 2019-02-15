@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title>自定义滚动条</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html, body{
+				height: 100%;
+				overflow: hidden;
+			}
+			.page{
+				position: relative;
+				height: 100%;
+				overflow: hidden;
+			}
+			.page-container{
+				position: absolute;
+				background: pink;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+			}
+			.content-block{
+				overflow: auto;
+			}
+			.header{
+				height: 1rem; 
+				line-height: 1rem; 
+				font-size: 0.36rem;
+			}
+			.page-container{
+				top: 1rem;
+			}
+			.scrollBar{
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 0.1rem;
+				height: 100%;
+				background: #999999;
+				opacity: 0;
+				transition: 1s opacity;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="header">Header</div>
+			<div class="page-container">
+				<div class="content-block">
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			window.onload=function(){
+				/*
+				原理：改变了一个元素在不同设备上占据的css像素的个数
+				rem适配的优缺点
+					优点:没有破坏完美视口
+					缺点:px值到rem的转换太复杂
+				*/
+				!(function(){
+					var styleNode = document.createElement("style");
+					var w = document.documentElement.clientWidth/7.5; // 100*(document.documentElement.clientWidth/750) ??
+					styleNode.innerHTML = "html{font-size:"+w+"px!important}";
+					document.head.appendChild(styleNode);
+				})();
+				
+				var page = document.querySelector(".page");
+				page.addEventListener("touchstart",function(ev){
+					ev=ev||event;
+					// 禁掉文字选中的默认行为 以及下拉的系统橡皮筋效果
+					ev.preventDefault();
+				})
+				
+				//移动端a标签的跳转方案  解决误触
+				var aNodes = document.querySelectorAll("a");
+				for(var i=0;i<aNodes.length;i++){
+					aNodes[i].addEventListener("touchstart",function(){
+						this.isMoved=false;
+					});
+					aNodes[i].addEventListener("touchmove",function(){
+						this.isMoved=true;
+					});
+					aNodes[i].addEventListener("touchend",function(){
+						if(!this.isMoved){
+							location.href=this.href;
+						}
+					});
+				}
+				
+				var content = document.querySelector(".page-container .content-block");
+				var str = ""
+				for(var i = 0; i < 100; i++){
+					str += '<div style="text-align: center; margin-top: 1rem; font-size:0.32rem">' + i + ' 竖向滑屏</div>'
+				}
+				content.innerHTML = str;
+				
+				// 全局初始化
+				globalInit();
+				function globalInit(){
+					var pageContainer = document.querySelector(".page-container");
+					pageContainer.appendChild(parseDom('<div class="scrollBar"></div>'))
+					var content = document.querySelector(".page-container .content-block");
+					var bar = document.querySelector(".scrollBar");
+					bar.style.height = (pageContainer.offsetHeight / content.offsetHeight) * pageContainer.offsetHeight + "px";
+					var verticalMove = new VerticalMove(".page-container", {
+						startCallback: startCallback,
+						moveCallback: moveCallback,
+						endCallback: endCallback,
+					});
+					// 竖向滑屏一开始时触发
+					function startCallback(options){
+						bar.style.opacity = 1;
+					}
+					// 竖向滑屏滑动中持续触发
+					function moveCallback(options){
+						// 滚动条滚动的实时距离/滚动条能滚动的最远距离 = 内容滚动的实时距离 / 内容能滚动的最远距离
+						var scale = css2D(options.moveItem, "translateY") / (content.offsetHeight - pageContainer.offsetHeight);
+						css2D(bar, "translateY", -scale*(pageContainer.offsetHeight-bar.offsetHeight));
+					}
+					// 竖向滑屏结束时触发
+					function endCallback(options){
+						bar.style.opacity = 0;
+					}
+					windowAddMouseWheel();
+					function windowAddMouseWheel() {
+						var scrollFunc = function (e) {
+							e = e || window.event;
+							if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件
+								if (e.wheelDelta > 0) { //当滑轮向上滚动时
+									// alert("滑轮向上滚动");
+								}
+								if (e.wheelDelta < 0) { //当滑轮向下滚动时
+									// alert("滑轮向下滚动");
+								}
+							} else if (e.detail) {  //Firefox滑轮事件
+								if (e.detail> 0) { //当滑轮向上滚动时
+									// alert("滑轮向上滚动");
+								}
+								if (e.detail< 0) { //当滑轮向下滚动时
+									// alert("滑轮向下滚动");
+								}
+							}
+						};
+						//给页面绑定滑轮滚动事件
+						if (document.addEventListener) {
+							document.addEventListener('DOMMouseScroll', scrollFunc, false);
+						}
+						//滚动滑轮触发scrollFunc方法
+						window.onmousewheel = document.onmousewheel = scrollFunc;
+					}
+				}
+				
+				/*
+				为什么要自己写滑屏 1.控制滑动区域 2.控制快速滑屏的速度 3.即点即停 
+				竖向滑屏不能使用transition
+				transition的问题
+				1.元素没有渲染完成时，无法触发过度
+				2.在transform切换下，如果前后transform属性值变换函数的位置 个数不一样 无法触发过渡
+				3.没有办法拿到transtion中任何一帧的状态
+				*/
+				function VerticalMove(elementId, options){
+					this.options = {};
+					this.options.elementId = elementId;
+					this.options.wrap = document.querySelector(elementId); // 滑屏区域
+					this.options.moveItem = this.options.wrap.children[0]; // 滑动元素
+					this.options.minY = this.options.wrap.clientHeight - this.options.moveItem.offsetHeight; // 元素向左滑动有橡皮筋效果的距离
+					this.options.lastTime = 0; // 手指在上一次位置的时间
+					this.options.lastPoint = 0; // 手指的上一次位置
+					this.options.lastPointX = 0; // 手指的上一次位置在y轴的位置 防抖动
+					this.options.timeDis = 1; // 时间差距 防NaN
+					this.options.pointDis = 0; // 距离差距
+					this.options.isY = true; // 首次滑屏方向 防抖动
+					this.options.isFirst = true; // 是否是第一次滑屏 防抖动
+					this.options.isMove = false; // 是否滑动
+					this.options.clearTimer = 0; // 快速滑屏无限循环
+					if(typeof options === 'object') extend(this.options, options);
+					// 插件初始化
+					init(this.options)
+					// 滑动事件监听
+					addSlideEvet(this.options);
+				}
+				
+				// 销毁实例
+				VerticalMove.prototype.destroy = function(){
+					delete this;
+				}
+				
+				// 插件初始化
+				function init(options){
+					css2D(options.moveItem, "translateZ" , 0);
+				}
+				
+				// 滑动事件监听
+				function addSlideEvet(options){
+					options.wrap.addEventListener("touchstart", function(ev){
+						ev = ev || event;
+						var touchC = ev.changedTouches[0];
+						options.moveItem.style.transition = "none";
+						options.lastTime = new Date().getTime();
+						options.lastPoint = touchC.clientY;
+						options.lastPointX = touchC.clientX;
+						// 清除速度的残留
+						options.pointDis = 0;
+						// 防抖动
+						options.isY = true;
+						options.isFirst = true;
+						// 即点即停
+						clearInterval(options.clearTimer);
+						// touchstart回调
+						if(options.startCallback && typeof options.startCallback === "function") options.startCallback(options);
+					});
+					options.wrap.addEventListener("touchmove", function(ev){
+						if(!options.isY) return; // 防抖动
+						ev = ev || event;
+						var touchC = ev.changedTouches[0];
+						var nowTime = new Date().getTime();
+						var nowPoint = touchC.clientY;
+						var nowPointX = touchC.clientX;
+						var pointDisX = nowPointX - options.lastPointX;
+						options.timeDis = nowTime - options.lastTime;
+						options.pointDis = nowPoint - options.lastPoint;
+						options.lastTime = nowTime;
+						options.lastPoint = nowPoint;
+						if(options.isFirst){
+							options.isFirst = false;
+							if(Math.abs(pointDisX) > Math.abs(options.pointDis)){
+								options.isY = false;
+								// 首次防抖动
+								return;
+							} 
+						}
+						var translateY = css2D(options.moveItem, "translateY") + options.pointDis;
+						/* 
+						手动滑屏橡皮筋效果
+						在move的过程中 手指滑动平均距离的元素的滑动距离慢慢变小
+						*/
+						if(translateY > 0){
+							var scale = document.documentElement.clientHeight / ((document.documentElement.clientHeight + translateY) * 2);
+							translateY = css2D(options.moveItem, "translateY") + options.pointDis * scale;
+							options.moveItem.handleMove = true;
+						}else if(translateY < options.minY){
+							var over = options.minY -translateY;
+							var scale = document.documentElement.clientHeight / ((document.documentElement.clientHeight + over) * 2);
+							translateY = css2D(options.moveItem, "translateY") + options.pointDis * scale;
+							options.moveItem.handleMove = true;
+						}
+						css2D(options.moveItem, "translateY", translateY);
+						// touchmove回调(手动滑屏)
+						if(options.moveCallback && typeof options.moveCallback === "function") options.moveCallback(options);
+					});
+					options.wrap.addEventListener("touchend", function(ev){
+						ev = ev || event;
+						// 快速滑屏橡皮筋效果
+						// 速度越大 位移越远
+						var speed = Math.abs(options.pointDis / options.timeDis) < 0.5 ? 0 : (options.pointDis / options.timeDis);
+						var targetY = css2D(options.moveItem, "translateY") + speed * 200;
+						var time = (Math.abs(speed) * 0.2) < 0.6 ? 0.6 : ((Math.abs(speed) * 0.2) > 1 ? 1 : (Math.abs(speed) * 0.2));
+						var type = "Linear";
+						if(targetY > 0){
+							targetY = 0;
+							if(!options.moveItem.handleMove){ // 处理橡皮筋效果的冲突
+								type = "Back";
+								bsr(options, targetY, time);
+							}
+						}else if(targetY < options.minY){
+							targetY = options.minY;
+							if(!options.moveItem.handleMove){
+								type = "Back";
+							}
+						}
+						bsr(options, targetY, time, type);
+						options.moveItem.handleMove = false;
+					});
+				}
+				
+				// 运动轨迹
+				function bsr(options,targetY, time, type){
+					clearInterval(options.clearTimer);
+					var t = 0; // 当前次数
+					var b = css2D(options.moveItem, "translateY"); // 初始位置
+					var c = targetY - b; // 最终位置-初始位置
+					var d = time*1000 / (1000/60); // 总次数
+					options.clearTimer = setInterval(function(){
+						t++;
+						if(t > d){
+							clearInterval(options.clearTimer);
+							// touchend回调
+							if(options.endCallback && typeof options.endCallback === "function") options.endCallback(options);
+							return;
+						}
+						var point = Tween[type](t, b, c, d)
+						css2D(options.moveItem, "translateY", point);
+						// touchmove回调(快速滑屏)
+						if(options.moveCallback && typeof options.moveCallback === "function") options.moveCallback(options);
+					}, 1000/60);
+				}
+				/*
+				t:当前是哪一次
+				b:初始位置
+				c:最终位置与初始位置之间的差值
+				d:总次数
+				s:回弹距离
+				*/
+				var Tween = {
+					Linear: function(t,b,c,d){ return c*t/d + b; },
+					Back: function(t,b,c,d,s){ if (s == undefined) s = 1.70158; return c*(t/=d)*t*((s+1)*t - s) + b; }
+				}
+				// css2D的读写
+				function css2D(node,type,val){
+					if(typeof node ==="object" && typeof node["transform"] ==="undefined" ){
+						node["transform"]={};
+					}
+					if(arguments.length>=3){
+						//设置
+						var text ="";
+						node["transform"][type] = val;
+						
+						for( item in node["transform"]){
+							if(node["transform"].hasOwnProperty(item)){
+								switch (item){
+									case "translateX":
+									case "translateY":
+									case "translateZ":
+										text +=  item+"("+node["transform"][item]+"px)";
+										break;
+									case "scale":
+										text +=  item+"("+node["transform"][item]+")";
+										break;
+									case "rotate":
+										text +=  item+"("+node["transform"][item]+"deg)";
+										break;
+								}
+							}
+						}
+						node.style.transform = node.style.webkitTransform = text;
+					}else if(arguments.length==2){
+						//读取
+						val =node["transform"][type];
+						if(typeof val === "undefined"){
+							switch (type){
+								case "translateX":
+								case "translateY":
+								case "rotate":
+									val =0;
+									break;
+								case "scale":
+									val =1;
+									break;
+							}
+						}
+						return val;
+					}
+				}
+				// 添加类
+				function addClass(node,className){
+					var reg=new RegEYp("\\b"+className+"\\b");
+					if(!reg.test(node.className)){
+						node.className +=(" "+className); 
+					}
+				}
+				//删除类
+				function removeClass(node,className){
+					if(node.className){
+						var reg=new RegEYp("\\b"+className+"\\b");
+						var classes = node.className;
+						node.className=classes.replace(reg,"");
+						if(/^\s*$/g.test(node.className)){
+							node.removeAttribute("class");
+						}
+					}else{
+						node.removeAttribute("class");
+					}
+				}
+				// 对象合并
+				function extend(o,n){
+					for (var p in n){
+						if(n.hasOwnProperty(p) && (!o.hasOwnProperty(p) )) o[p]=n[p];
+					}
+				} 
+				// 字符串转换为Dom
+				function parseDom(str) {
+				　　 var objE = document.createElement("div");
+				　　 objE.innerHTML = str;
+				　　 return objE.childNodes[0];
+				}
+			}
+		</script>
+	</body>
+</html>

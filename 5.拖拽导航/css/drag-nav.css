@@ -1,0 +1,16 @@
+.nav-wrap{
+	overflow: hidden;
+}
+.nav-list{
+	list-style: none;
+	font-size: 0;
+	white-space: nowrap;
+	float: left;
+}
+.nav-list li{
+	display: inline-block;
+	width: 1.5rem;
+	height: 0.8rem;
+	line-height: 0.8rem;
+	font-size: 0.32rem;
+}

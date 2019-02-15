@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<meta name="format-detection" content="telephone=no,email=no"/>
+		<title>音悦tai_demo</title>
+		<link rel="stylesheet" type="text/css" href="css/cluster.css" />
+		<style type="text/css">
+			/* 页面 */
+			.page-container{
+				top: 3.52rem;
+			}
+			/* 头部 */
+			.header{
+				display: -webkit-flex;
+				justify-content: space-between;
+				align-items: center;
+				position: absolute;
+				width: 100%;
+				height: 1.92rem;
+				background: #000000;
+			}
+			.header-left, .header-right{
+				display: -webkit-flex;
+				align-items: center;
+			}
+			.header-left{
+				padding-left: 0.8rem;
+			}
+			.header-right{
+				align-items: center;
+				padding-right: 0.8rem;
+			}
+			.logo{
+				width: 3rem;
+				height: 1rem;
+				background: url(image/index/logo.png) no-repeat transparent;
+				background-size: 3rem 1rem;
+			}
+			.menu{
+				width: 0.704rem;
+				height: 0.512rem;
+				background: url(image/index/menu.png) no-repeat transparent;
+				background-size: cover;
+				margin-left: 0.3rem;
+				margin-top: 0.2rem;
+			}
+			.search{
+				width: 0.8rem;
+				height: 0.8rem;
+				background: url(image/index/sbtn.png) no-repeat;
+				background-size: 0.8rem 0.8rem;
+			}
+			.login{
+				font-size: 0.6rem;
+				color: #FFFFFF;
+				margin-left: 0.6rem;
+			}
+			/* 面包屑导航 */
+			.panel{
+				display: none;
+				position: absolute;
+				background: #FFFFFF;
+				margin-top: 1.92rem;
+				z-index: 99;
+			}
+			.panel .panel-wrapper ul{
+				list-style: none;
+			}
+			.panel .panel-wrapper ul li{
+				position: relative;
+				float: left;
+				width: 3.6rem;
+				height: 2rem;
+				line-height: 2rem;
+				text-align: center;
+			}
+			.panel .panel-wrapper ul li a {
+				font-size: 0.512rem;
+				padding: 0.5rem 0.2rem;
+				text-align: center;
+				color: #000;
+				text-decoration: none;
+			}
+			.panel .panel-wrapper ul li a.active {
+				color: #50e4ca;
+			}
+			/* 拖拽导航 */
+			.nav-wrap{
+				position: absolute;
+				width: 100%;
+				top: 1.92rem;
+			}
+			.nav-list{
+				position: relative;
+			}
+			.nav-list li{
+				width: auto;
+				height: 1.6rem;
+			}
+			.nav-list li a{
+				display: block;
+				line-height: 1.472rem;
+				font-size: 0.512rem;
+				margin: 0 0.75rem;
+				color: #000;
+				text-decoration: none;
+			}
+			.nav-list li.active a{
+				border-bottom: 0.128rem solid #27d5bf;
+			}
+			.tap{
+				
+			}
+			.tap-title{
+				display: flex;
+				justify-content: space-between;
+				height: 2.88rem;
+				line-height: 2.88rem;
+				padding: 0 0.64rem;
+				font-size: 0.6rem;
+				color: #4b4c4d;
+			}
+			.tap-title-right{
+				font-size: 0.469333rem;
+			}
+			.tap-title-right span{
+				background: url(image/index/cbtn.png) no-repeat transparent;
+				width: 0.6rem;
+				height: 0.6rem;
+				background-size: contain;
+				vertical-align: middle;
+				display: inline-block;
+				margin-right: 0.12rem;
+			}
+			.tap-content-item{
+				float: left;
+				margin: 0 0 0.42666rem 0.384rem;
+			}
+			.tap-content-item-top img{
+				width: 7.424rem;
+				height: 4.37333rem;
+				background-size: cover;
+			}
+			.tap-content-item-bottom{
+				font-size: 0.512rem;
+			}
+			.tap-loading, .tap-content{
+				width: 16rem;
+			}
+			.carousel-points span{
+				width: 0.5rem;
+				height: 0.5rem;
+				margin-left: 0.24rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="header">
+				<div class="header-left">
+					<div class="logo"></div>
+					<div class="menu"></div>
+				</div>
+				<div class="header-right">
+					<div class="search"></div>
+					<div class="login">登录</div>
+				</div>
+			</div>
+			<div class="panel">
+				<div class="panel-wrapper">
+					<ul class="clearfix">
+						<li><a class="active" href="#">首页</a></li>
+						<li><a href="#">频道</a></li>
+						<li><a href="#">v榜</a></li>
+						<li><a href="#">商城</a></li>
+						<li><a href="#">悦单</a></li>
+						<li><a href="#">全部MV</a></li>
+						<li><a href="#">APP下载</a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="drag1" class="nav-wrap">
+				<ul class="nav-list">
+					<li class="active"><a href="#">首页</a></li>
+					<li><a href="#">频道</a></li>
+					<li><a href="#">v榜</a></li>
+					<li><a href="#">商城</a></li>
+					<li><a href="#">众筹</a></li>
+					<li><a href="#">悦单</a></li>
+					<li><a href="#">App下载</a></li>
+					<li><a href="#">众筹</a></li>
+					<li><a href="#">悦单</a></li>
+					<li><a href="#">App下载</a></li>
+				</ul>
+			</div>
+			<div class="page-container">
+				<div class="content-block">
+					<div id="carousel1" class="carousel-wrap" needSeamless needAuto>
+						<div class="carousel-points"></div>
+					</div>
+					<div class="tap">
+						<div class="tap-title">
+							<div class="tap-title-left">MV首播</div>
+							<div class="tap-title-right"><span></span>换一换</div>
+						</div>
+						<div class="tap-content clearfix">
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/1.png" />
+								</div>
+								<div class="tap-content-item-bottom">Christmas at Swae's</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/2.png" />
+								</div>
+								<div class="tap-content-item-bottom">Wow.</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/3.png" />
+								</div>
+								<div class="tap-content-item-bottom">Fire On Fire</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/4.jpg" />
+								</div>
+								<div class="tap-content-item-bottom">Shout it out</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/5.jpg" />
+								</div>
+								<div class="tap-content-item-bottom">奇怪的帽子之排练</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/6.jpg" />
+								</div>
+								<div class="tap-content-item-bottom">最好的礼物</div>
+							</div>
+						</div>
+					</div>
+					<div class="tap">
+						<div class="tap-title">
+							<div class="tap-title-left">娱乐</div>
+							<div class="tap-title-right"><span></span>换一换</div>
+						</div>
+						<div class="tap-content clearfix">
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/1.png" />
+								</div>
+								<div class="tap-content-item-bottom">Christmas at Swae's</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/2.png" />
+								</div>
+								<div class="tap-content-item-bottom">Wow.</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/3.png" />
+								</div>
+								<div class="tap-content-item-bottom">Fire On Fire</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/4.jpg" />
+								</div>
+								<div class="tap-content-item-bottom">Shout it out</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/5.jpg" />
+								</div>
+								<div class="tap-content-item-bottom">奇怪的帽子之排练</div>
+							</div>
+							<div class="tap-content-item">
+								<div class="tap-content-item-top">
+									<img src="image/index/6.jpg" />
+								</div>
+								<div class="tap-content-item-bottom">最好的礼物</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload = function(){
+				// 面包屑导航
+				var menu = document.querySelector(".menu");
+				menu.addEventListener("touchend", function(ev){
+					ev = ev || event;
+					var panel = document.querySelector(".panel");
+					var display = panel.style.display;
+					if(display == "block"){
+						panel.style.display = "none";
+					}else if(!display || display == "none"){
+						panel.style.display = "block";
+					}
+				})
+				var container = document.querySelector(".page-container");
+				container.addEventListener("touchend", function(ev){
+					var panel = document.querySelector(".panel");
+					panel.style.display = "none";
+				});
+				// 拖拽导航
+				var dragNav = new DragNav("#drag1");
+				var dragUlNode = document.querySelector("#drag1 ul");
+				
+				// 无缝滑屏
+				var imgDir = "image/index/slide/"
+				var imgArr = [imgDir+"1.jpg", imgDir+"2.jpg", imgDir+"3.jpg", imgDir+"4.jpg", imgDir+"5.jpg", imgDir+"6.jpg", imgDir+"7.jpg", imgDir+"8.jpg",imgDir+"9.jpg", imgDir+"10.jpg",];
+				var swiper = new Swiper("#carousel1", imgArr);
+			}
+		</script>
+	</body>
+</html>

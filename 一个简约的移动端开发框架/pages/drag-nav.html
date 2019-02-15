@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title>拖拽导航</title>
+		<link rel="stylesheet" type="text/css" href="../css/cluster.css" />
+		<style type="text/css">
+			.nav-wrap.line:before{
+				top: 0.78rem;
+			}
+			.nav-list{
+				position: relative;
+			}
+			.nav-list li{
+				text-align: center;
+				position: relative;
+			}
+			.nav-list li.active:before{
+				position: absolute;
+				left: 0.25rem;
+				bottom: -0.01rem;
+				content: "";
+				display: block;
+				width: 1rem;
+				height: 0.04rem;
+				background: #27d5bf;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="page-container">
+				<div class="content-block">
+					<div id="drag1" class="nav-wrap line">
+						<ul class="nav-list">
+							<li class="active">首页</li>
+							<li>频道</li>
+							<li>v榜</li>
+							<li>商城</li>
+							<li>众筹</li>
+							<li>悦单</li>
+							<li>App下载</li>
+							<li>众筹</li>
+							<li>悦单</li>
+							<li>App下载</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/cluster.js"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var dragNav = new DragNav("#drag1");
+			}
+		</script>
+	</body>
+</html>

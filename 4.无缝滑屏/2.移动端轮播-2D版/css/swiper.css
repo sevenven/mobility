@@ -1,0 +1,40 @@
+.carousel-wrap{
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+.carousel-list{
+	position: absolute;
+	list-style: none;
+} 
+.carousel-list > li{
+	float: left;
+}
+.carousel-list > li > a,.carousel-list > li > a > img{
+	display: block;
+}
+.carousel-list > li > a > img{
+	width: 100%;
+}
+.carousel-points{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	bottom: 0.25rem;
+	font-size: 0;
+	z-index: 1;
+}
+.carousel-points span{
+	display: inline-block;
+	width: 0.25rem;
+	height: 0.25rem;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 1);
+	margin-left: 0.12rem;
+}
+.carousel-points span.active{
+	background: grey;
+}
+.carousel-points span:nth-child(1){
+	margin-left: 0;
+}

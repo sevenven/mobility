@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="Height=device-Height,initial-scale=1.0,minimum-scale=1.0,maYimum-scale=1.0,user-scalable=no" />
+		<title>下拉刷新</title>
+		<link rel="stylesheet" type="text/css" href="css/pull-refresh.css" />
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html, body{
+				height: 100%;
+				overflow: hidden;
+			}
+			.page{
+				position: relative;
+				height: 100%;
+				overflow: hidden;
+			}
+			.page-container{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+			}
+			.content-block{
+				overflow: auto;
+			}
+			.header{
+				height: 1rem; 
+				line-height: 1rem; 
+				font-size: 0.36rem;
+				background: pink;
+			}
+			.page-container{
+				top: 1rem;
+			}
+			.scrollBar{
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 0.1rem;
+				height: 100%;
+				background: #999999;
+				opacity: 0;
+				transition: 1s opacity;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<div class="header">Header</div>
+			<div class="page-container">
+				<div class="content-block">
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/pull-refresh.js"></script>
+		<script type="text/javascript">
+			/*
+			原理：改变了一个元素在不同设备上占据的css像素的个数
+			rem适配的优缺点
+				优点:没有破坏完美视口
+				缺点:px值到rem的转换太复杂
+			*/
+			!(function(){
+				var styleNode = document.createElement("style");
+				var w = document.documentElement.clientWidth/7.5; // 100*(document.documentElement.clientWidth/750) ??
+				styleNode.innerHTML = "html{font-size:"+w+"px!important}";
+				document.head.appendChild(styleNode);
+			})();
+			
+			var page = document.querySelector(".page");
+			page.addEventListener("touchstart",function(ev){
+				ev=ev||event;
+				// 禁掉文字选中的默认行为 以及下拉的系统橡皮筋效果
+				ev.preventDefault();
+			})
+			
+			var content = document.querySelector(".page-container .content-block");
+			var str = ""
+			for(var i = 0; i < 12; i++){
+				str += '<div style="text-align: center; margin-top: 1rem; font-size:0.32rem">' + i + ' 下拉刷新</div>'
+			}
+			content.innerHTML = str;
+			// 下拉刷新
+			util.pullRefresh(function(){
+				setTimeout(function(){
+					util.pullRefreshDone();
+					console.log("下拉刷新啦")
+				}, 500);
+			});
+			
+		</script>
+	</body>
+</html>
