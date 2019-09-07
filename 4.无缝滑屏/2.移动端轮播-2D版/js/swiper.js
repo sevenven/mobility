@@ -37,10 +37,10 @@
 				options.ulNode.innerHTML += '<li style="width: ' + (100/options.imgLength) + '%"><a href="javascript:;"><img src="' + options.imgArr[i] + '" /></a></li>';
 			}
 			options.carouselWrap.appendChild(options.ulNode);
-			setTimeout(function(){
-				var imgNode = document.querySelector(options.elementId + " .carousel-list > li > a > img");
+			var imgNode = document.querySelector(options.elementId + " .carousel-list > li > a > img");
+			imgNode.onload = function () {
 				options.carouselWrap.style.height = imgNode.offsetHeight + "px";
-			}, 100);
+			}
 			if(options.pointsWrap){   
 				for(var i = 0; i < options.pointsLength; i++){
 					if(i == 0){
