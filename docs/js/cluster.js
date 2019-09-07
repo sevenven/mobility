@@ -193,6 +193,7 @@
 		this.options.startY = 0; // touchstart时手指在y轴的位置 防抖动
 		this.options.isX = true; // 首次滑屏方向 防抖动
 		this.options.isFirst = true; // 是否是第一次滑屏 防抖动
+		this.options.dir = "toRight"; // 记录滑屏方向 取消橡皮筋效果		
 		// 组件初始化
 		init(this.options);
 		// 添加滑屏监听
@@ -271,6 +272,8 @@
 				var nowY = touchC.clientY;
 				var disX = nowX - options.startX;
 				var disY = nowY - options.startY;
+				options.dir = "toRight"
+				if(disX > 0) options.dir = "toLeft"
 				if(options.isFirst){
 					options.isFirst = false;
 					if(Math.abs(disY) > Math.abs(disX)){
@@ -283,7 +286,11 @@
 			});
 			options.carouselWrap.addEventListener("touchend", function(ev){
 				ev = ev || event;
-				options.index = Math.round(tools.css2D(options.ulNode, "translateX") / document.querySelector(options.elementId + " .carousel-list > li").getBoundingClientRect().width.toFixed(1));
+				if(options.dir === "toRight"){
+					options.index = Math.floor(tools.css2D(options.ulNode, "translateX") / document.querySelector(options.elementId + " .carousel-list > li").getBoundingClientRect().width.toFixed(1));
+				}else {
+					options.index = Math.ceil(tools.css2D(options.ulNode, "translateX") / document.querySelector(options.elementId + " .carousel-list > li").getBoundingClientRect().width.toFixed(1));
+				}
 				// 超出控制
 				if(options.index > 0){
 					options.index = 0;
@@ -566,7 +573,7 @@
 				var touchC = ev.changedTouches[0];
 				var nowPointX = touchC.clientX;
 				var disX = nowPointX - options.startPoint.x;
-				if(Math.abs(disX) <= options.width / 2){
+				if(Math.abs(disX) <= options.width / 3){
 					options.tapWrap.style.transition = "1s transform"
 					tools.css2D(options.tapWrap, "translateX", -options.width);
 				}
@@ -575,7 +582,7 @@
 		
 		// 1/2跳转
 		function jump(options, disX){
-			if(Math.abs(disX) > options.width / 2){
+			if(Math.abs(disX) > options.width / 3){
 				options.isOver = true;
 				options.tapWrap.style.transition = "1s transform";
 				disX > 0 ? tools.css2D(options.tapWrap, "translateX", 0) : tools.css2D(options.tapWrap, "translateX", -options.width * 2);
