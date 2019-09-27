@@ -198,6 +198,7 @@
 		this.options.forbitBottomBackRubberBanding = false; // 禁止手动滑屏底部回弹
 		this.options.forbitBottomRubberBanding = false; // 禁止手动滑屏底部橡皮筋效果 
 		this.options.clearTimer = 0; // 快速滑屏无限循环
+		this.options.forbitMove = true; // 滑动元素小于滑屏元素时是否禁止滑屏
 		if(typeof options === 'object') tools.extend(this.options, options);
 		// 插件初始化
 		init(this.options)
@@ -250,7 +251,7 @@
 					} 
 				}
 				// 当滑动区域小于滑屏区域时，禁止向下的滑屏
-				if(options.pointDis < 0 && options.minY > 0) return;
+				if(options.forbitMove && options.pointDis < 0 && options.minY > 0) return;
 				var translateY = tools.css2D(options.moveItem, "translateY") + options.pointDis;
 				/* 
 				手动滑屏橡皮筋效果
@@ -274,7 +275,7 @@
 			});
 			options.wrap.addEventListener("touchend", function(ev){
 				// 当滑动区域小于滑屏区域时，禁止向下的滑屏
-				if(options.pointDis < 0 && options.minY > 0) return;
+				if(options.forbitMove && options.pointDis < 0 && options.minY > 0) return;
 				ev = ev || event;
 				// 快速滑屏 速度越大 位移越远
 				var speed = Math.abs(options.pointDis / options.timeDis) < 0.5 ? 0 : (options.pointDis / options.timeDis);
@@ -568,7 +569,7 @@
 			});
 			var pickerSlot = options.picker.getElementsByClassName("picker-slot");
 			for(var i = 0; i < pickerSlot.length; i++){
-				new VerticalMove("#" + pickerSlot[i].getAttribute("id"), {startCallback: _startCallback, endCallback: _endCallback, forbitTopBackRubberBanding: true, forbitBottomBackRubberBanding: true});
+				new VerticalMove("#" + pickerSlot[i].getAttribute("id"), {startCallback: _startCallback, endCallback: _endCallback, forbitTopBackRubberBanding: true, forbitBottomBackRubberBanding: true, forbitMove: false});
 			}
 		}
 		// 触发插件元素添加Tap事件监听
