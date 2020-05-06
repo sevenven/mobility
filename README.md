@@ -1,5 +1,6 @@
 #### 预览
 地址：https://sevenven.github.io/mobility/
+
 请在手机上或者PC浏览器的移动模式下预览
 #### 插件相关说明
 1. 通用的移动端适配方案
